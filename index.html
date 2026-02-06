@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Pop the Bitcoin Faces!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #score {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 32px;
+      color: white;
+      text-shadow: 3px 3px 0 #F7931A, -1px -1px 0 #F7931A;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    #stars {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+      animation: float-up linear forwards;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, transparent 70%),
+                  radial-gradient(circle, #87CEEB 0%, #4169E1 100%);
+      box-shadow: 0 0 20px rgba(255,255,255,0.5), inset 0 0 20px rgba(255,255,255,0.3);
+      transition: transform 0.1s;
+    }
+
+    .bubble:active {
+      transform: scale(1.1);
+    }
+
+    .bubble img {
+      width: 70%;
+      height: 70%;
+      border-radius: 50%;
+      pointer-events: none;
+      object-fit: cover;
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .pop {
+      animation: pop-effect 0.3s ease-out forwards !important;
+    }
+
+    @keyframes pop-effect {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 30px;
+      animation: sparkle-fly 0.6s ease-out forwards;
+    }
+
+    @keyframes sparkle-fly {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5) rotate(180deg) translateY(-50px);
+        opacity: 0;
+      }
+    }
+
+    #start-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      gap: 30px;
+    }
+
+    #start-screen h1 {
+      font-size: 36px;
+      color: white;
+      text-shadow: 3px 3px 0 #F7931A;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    #start-screen .demo-faces {
+      display: flex;
+      gap: 15px;
+    }
+
+    #start-screen .demo-face {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, transparent 70%),
+                  radial-gradient(circle, #87CEEB 0%, #4169E1 100%);
+      animation: bounce 1s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #start-screen .demo-face:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    #start-screen .demo-face:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    #start-screen .demo-face img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    #start-btn {
+      font-size: 32px;
+      padding: 20px 60px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #F7931A 0%, #ffb347 100%);
+      color: white;
+      font-family: inherit;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+      box-shadow: 0 8px 0 #c77300, 0 10px 20px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    #start-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #c77300, 0 6px 10px rgba(0,0,0,0.3);
+    }
+
+    .instructions {
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div id="start-screen">
+    <h1>🎈 Pop the Bitcoin Faces! 🎈</h1>
+    <div class="demo-faces">
+      <div class="demo-face"><img src="https://bitcoinfaces.xyz/api/get-image?name=satoshi" alt="face"></div>
+      <div class="demo-face"><img src="https://bitcoinfaces.xyz/api/get-image?name=bitcoin" alt="face"></div>
+      <div class="demo-face"><img src="https://bitcoinfaces.xyz/api/get-image?name=hodl" alt="face"></div>
+    </div>
+    <button id="start-btn">▶ PLAY!</button>
+    <p class="instructions">Tap the bubbles! 👆</p>
+  </div>
+
+  <div id="game">
+    <div id="score">⭐ 0</div>
+    <div id="stars"></div>
+  </div>
+
+  <script>
+    const game = document.getElementById('game');
+    const scoreDisplay = document.getElementById('score');
+    const starsDisplay = document.getElementById('stars');
+    const startScreen = document.getElementById('start-screen');
+    const startBtn = document.getElementById('start-btn');
+
+    let score = 0;
+    let bubbleInterval;
+
+    // Fun Bitcoin-related names for faces
+    const faceNames = [
+      'satoshi', 'bitcoin', 'hodl', 'moon', 'rocket', 'diamond', 'hands',
+      'bull', 'laser', 'orange', 'pill', 'stack', 'sats', 'whale', 'bear',
+      'doge', 'pepe', 'frog', 'cat', 'dog', 'happy', 'smile', 'star',
+      'rainbow', 'unicorn', 'magic', 'spark', 'glow', 'shine', 'bright'
+    ];
+
+    // Cheerful emojis for pops
+    const popEmojis = ['⭐', '🌟', '✨', '💫', '🎉', '🎊', '💖', '🧡', '💛', '💚', '💙', '💜'];
+
+    // Sounds using Web Audio (no external files needed)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playPopSound() {
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      oscillator.frequency.setValueAtTime(800 + Math.random() * 400, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(1200 + Math.random() * 200, audioCtx.currentTime + 0.1);
+
+      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.2);
+    }
+
+    function createBubble() {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+
+      // Random size (bigger = easier for kids)
+      const size = 80 + Math.random() * 60;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+
+      // Random horizontal position
+      const maxX = window.innerWidth - size;
+      bubble.style.left = Math.random() * maxX + 'px';
+      bubble.style.bottom = '-' + size + 'px';
+
+      // Random float duration (slower = easier)
+      const duration = 6 + Math.random() * 4;
+      bubble.style.animationDuration = duration + 's';
+
+      // Add face image
+      const img = document.createElement('img');
+      const randomName = faceNames[Math.floor(Math.random() * faceNames.length)];
+      img.src = `https://bitcoinfaces.xyz/api/get-image?name=${randomName}`;
+      img.alt = 'Bitcoin Face';
+      img.onerror = () => {
+        // Fallback to a simple emoji if image fails
+        img.style.display = 'none';
+        bubble.textContent = '😊';
+        bubble.style.fontSize = (size * 0.5) + 'px';
+      };
+      bubble.appendChild(img);
+
+      // Pop on tap/click
+      bubble.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        popBubble(bubble);
+      });
+
+      game.appendChild(bubble);
+
+      // Remove bubble when animation ends
+      bubble.addEventListener('animationend', () => {
+        if (!bubble.classList.contains('pop')) {
+          bubble.remove();
+        }
+      });
+    }
+
+    function popBubble(bubble) {
+      if (bubble.classList.contains('pop')) return;
+
+      // Resume audio context if suspended (iOS requirement)
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      playPopSound();
+
+      // Add pop animation
+      bubble.classList.add('pop');
+
+      // Create sparkles
+      const rect = bubble.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 5; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.textContent = popEmojis[Math.floor(Math.random() * popEmojis.length)];
+        sparkle.style.left = (centerX + (Math.random() - 0.5) * 50) + 'px';
+        sparkle.style.top = (centerY + (Math.random() - 0.5) * 50) + 'px';
+        document.body.appendChild(sparkle);
+
+        sparkle.addEventListener('animationend', () => sparkle.remove());
+      }
+
+      // Update score
+      score++;
+      scoreDisplay.textContent = '⭐ ' + score;
+
+      // Add stars for milestones
+      if (score % 10 === 0) {
+        starsDisplay.textContent += '🌟';
+      }
+
+      // Remove bubble after pop animation
+      setTimeout(() => bubble.remove(), 300);
+    }
+
+    function startGame() {
+      startScreen.style.display = 'none';
+      score = 0;
+      scoreDisplay.textContent = '⭐ 0';
+      starsDisplay.textContent = '';
+
+      // Resume audio context
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      // Create bubbles periodically
+      createBubble();
+      bubbleInterval = setInterval(createBubble, 1500);
+    }
+
+    startBtn.addEventListener('click', startGame);
+    startBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startGame();
+    });
+  </script>
+</body>
+</html>
