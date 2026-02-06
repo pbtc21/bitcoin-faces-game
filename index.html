@@ -3,49 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Pop the Bitcoin Faces! | AIBTC</title>
+  <title>Pop the Bitcoin Faces!</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #0a0a0a 0%, #050208 50%, #0a0812 100%);
+      background: #0a0a0a;
       min-height: 100vh;
       overflow: hidden;
       touch-action: manipulation;
-    }
-
-    #game {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
+      font-family: system-ui, sans-serif;
     }
 
     #score {
       position: fixed;
       top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 36px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 48px;
       font-weight: bold;
       color: #F7931A;
-      text-shadow: 0 0 20px rgba(247,147,26,0.5);
-      z-index: 100;
-      pointer-events: none;
-    }
-
-    #stars {
-      position: fixed;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 28px;
       z-index: 100;
       pointer-events: none;
     }
@@ -57,389 +35,131 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at 30% 30%, rgba(247,147,26,0.4) 0%, rgba(125,162,255,0.3) 50%, rgba(168,85,247,0.2) 100%);
-      border: 3px solid rgba(247,147,26,0.6);
-      box-shadow: 0 0 30px rgba(247,147,26,0.4), inset 0 0 20px rgba(125,162,255,0.2);
-      will-change: transform;
-    }
-
-    .bubble:active {
-      transform: scale(1.15) !important;
+      background: radial-gradient(circle at 30% 30%, rgba(247,147,26,0.5), rgba(125,162,255,0.3));
+      border: 4px solid #F7931A;
+      box-shadow: 0 0 30px rgba(247,147,26,0.5);
     }
 
     .bubble img {
-      width: 75%;
-      height: 75%;
+      width: 80%;
+      height: 80%;
       border-radius: 50%;
       pointer-events: none;
-      object-fit: cover;
-      border: 2px solid rgba(255,255,255,0.3);
     }
 
-    .pop {
-      animation: pop-effect 0.3s ease-out forwards !important;
-    }
-
-    @keyframes pop-effect {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.6);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(0);
-        opacity: 0;
-      }
-    }
-
-    .sparkle {
-      position: fixed;
-      pointer-events: none;
-      font-size: 40px;
-      animation: sparkle-fly 0.8s ease-out forwards;
-      z-index: 200;
-    }
-
-    @keyframes sparkle-fly {
-      0% {
-        transform: scale(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1.5) rotate(180deg) translateY(-80px);
-        opacity: 0;
-      }
-    }
-
-    #start-screen {
+    #start {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, #0a0a0a 0%, #050208 50%, #0a0812 100%);
+      background: #0a0a0a;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 40px;
       z-index: 200;
-      gap: 30px;
     }
 
-    #start-screen h1 {
-      font-size: 32px;
+    #start h1 {
+      font-size: 36px;
       color: #F7931A;
-      text-shadow: 0 0 30px rgba(247,147,26,0.5);
       text-align: center;
       padding: 0 20px;
     }
 
-    #start-screen .subtitle {
-      color: #7DA2FF;
-      font-size: 18px;
-      margin-top: -20px;
-    }
-
-    #start-screen .demo-faces {
-      display: flex;
-      gap: 20px;
-    }
-
-    #start-screen .demo-face {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(247,147,26,0.4) 0%, rgba(125,162,255,0.3) 50%, rgba(168,85,247,0.2) 100%);
-      border: 3px solid rgba(247,147,26,0.6);
-      box-shadow: 0 0 20px rgba(247,147,26,0.3);
-      animation: bounce 1.2s ease-in-out infinite;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #start-screen .demo-face:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    #start-screen .demo-face:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-25px); }
-    }
-
-    #start-screen .demo-face img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-    }
-
-    #start-btn {
-      font-size: 36px;
-      padding: 25px 80px;
+    #play-btn {
+      font-size: 40px;
+      padding: 30px 80px;
       border: none;
-      border-radius: 60px;
-      background: linear-gradient(135deg, #F7931A 0%, #ffb347 100%);
+      border-radius: 999px;
+      background: #F7931A;
       color: white;
-      font-family: inherit;
       font-weight: bold;
-      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-      box-shadow: 0 8px 0 #c77300, 0 0 40px rgba(247,147,26,0.4);
       cursor: pointer;
-      transition: all 0.1s;
     }
 
-    #start-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 4px 0 #c77300, 0 0 20px rgba(247,147,26,0.4);
+    .pop {
+      animation: pop 0.2s ease-out forwards;
     }
 
-    .instructions {
-      color: #7DA2FF;
-      font-size: 22px;
-      text-align: center;
-    }
-
-    /* Floating background orbs like aibtc.com */
-    .bg-orb {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .bg-orb-1 {
-      top: -200px;
-      right: -200px;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(247,147,26,0.15) 0%, transparent 70%);
-      animation: float-orb 20s ease-in-out infinite;
-    }
-    .bg-orb-2 {
-      bottom: -200px;
-      left: -200px;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(125,162,255,0.12) 0%, transparent 70%);
-      animation: float-orb 25s ease-in-out infinite reverse;
-    }
-    @keyframes float-orb {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(30px, 30px); }
+    @keyframes pop {
+      to { transform: scale(2); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
-
-  <div id="start-screen">
-    <h1>🎈 Pop the Bitcoin Faces!</h1>
-    <p class="subtitle">by AIBTC</p>
-    <div class="demo-faces">
-      <div class="demo-face"><img src="https://bitcoinfaces.xyz/api/get-image?name=satoshi" alt="face"></div>
-      <div class="demo-face"><img src="https://bitcoinfaces.xyz/api/get-image?name=bitcoin" alt="face"></div>
-      <div class="demo-face"><img src="https://bitcoinfaces.xyz/api/get-image?name=hodl" alt="face"></div>
-    </div>
-    <button id="start-btn">▶ PLAY!</button>
-    <p class="instructions">Tap the bubbles! 👆</p>
+  <div id="start">
+    <h1>🎈 Pop the Faces! 🎈</h1>
+    <button id="play-btn">PLAY</button>
   </div>
 
-  <div id="game">
-    <div id="score">0</div>
-    <div id="stars"></div>
-  </div>
+  <div id="score">0</div>
 
   <script>
-    const game = document.getElementById('game');
-    const scoreDisplay = document.getElementById('score');
-    const starsDisplay = document.getElementById('stars');
-    const startScreen = document.getElementById('start-screen');
-    const startBtn = document.getElementById('start-btn');
-
     let score = 0;
-    let bubbleInterval;
-    let activeBubbles = [];
+    let gameRunning = false;
+    const names = ['satoshi', 'bitcoin', 'hodl', 'moon', 'rocket', 'diamond'];
 
-    // Fun Bitcoin-related names for faces
-    const faceNames = [
-      'satoshi', 'bitcoin', 'hodl', 'moon', 'rocket', 'diamond', 'hands',
-      'bull', 'laser', 'orange', 'pill', 'stack', 'sats', 'whale',
-      'doge', 'pepe', 'frog', 'cat', 'dog', 'happy', 'smile', 'star',
-      'rainbow', 'unicorn', 'magic', 'spark', 'glow', 'shine', 'bright',
-      'agent', 'ai', 'robot', 'cyber', 'code', 'hash', 'block', 'chain'
-    ];
+    document.getElementById('play-btn').onclick = function() {
+      document.getElementById('start').style.display = 'none';
+      gameRunning = true;
+      // Spawn 6 bubbles immediately ON SCREEN
+      for (let i = 0; i < 6; i++) {
+        spawnBubble(true);
+      }
+      // Then keep spawning from bottom
+      setInterval(function() { spawnBubble(false); }, 600);
+    };
 
-    // Bitcoin-themed emojis for pops
-    const popEmojis = ['⭐', '🌟', '✨', '💫', '🚀', '🌙', '💎', '🔥', '⚡', '🧡'];
+    function spawnBubble(startOnScreen) {
+      if (!gameRunning) return;
 
-    // Sounds using Web Audio
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playPopSound() {
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      oscillator.frequency.setValueAtTime(600 + Math.random() * 400, audioCtx.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(1000 + Math.random() * 300, audioCtx.currentTime + 0.1);
-
-      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.15);
-    }
-
-    function createBubble() {
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
 
-      // Random size (bigger = easier for kids)
-      const size = 90 + Math.random() * 50;
+      const size = 100 + Math.random() * 40;
       bubble.style.width = size + 'px';
       bubble.style.height = size + 'px';
+      bubble.style.left = (20 + Math.random() * (window.innerWidth - size - 40)) + 'px';
 
-      // Random horizontal position
-      const maxX = window.innerWidth - size - 20;
-      const startX = 10 + Math.random() * maxX;
-      bubble.style.left = startX + 'px';
-
-      // Start below screen
-      let posY = window.innerHeight + size;
-      bubble.style.top = posY + 'px';
-
-      // Add face image
       const img = document.createElement('img');
-      const randomName = faceNames[Math.floor(Math.random() * faceNames.length)];
-      img.src = `https://bitcoinfaces.xyz/api/get-image?name=${randomName}`;
-      img.alt = 'Bitcoin Face';
-      img.onerror = () => {
-        img.style.display = 'none';
-        bubble.textContent = '₿';
-        bubble.style.fontSize = (size * 0.5) + 'px';
-        bubble.style.color = '#F7931A';
-      };
+      img.src = 'https://bitcoinfaces.xyz/api/get-image?name=' + names[Math.floor(Math.random() * names.length)];
+      img.onerror = function() { bubble.textContent = '₿'; bubble.style.fontSize = '50px'; bubble.style.color = '#F7931A'; };
       bubble.appendChild(img);
 
-      // Pop on tap/click
-      bubble.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        popBubble(bubble);
-      });
+      document.body.appendChild(bubble);
 
-      game.appendChild(bubble);
+      // Start position - on screen if first batch, otherwise from bottom
+      let y;
+      if (startOnScreen) {
+        y = 200 + Math.random() * (window.innerHeight - 300);
+      } else {
+        y = window.innerHeight + 50;
+      }
+      bubble.style.top = y + 'px';
 
-      // Float speed (pixels per frame)
-      const speed = 1.5 + Math.random() * 1.5;
-      const wobbleSpeed = 0.02 + Math.random() * 0.02;
-      let wobblePhase = Math.random() * Math.PI * 2;
+      // Animate up VERY slowly
+      function move() {
+        y -= 0.5;
+        bubble.style.top = y + 'px';
 
-      const bubbleData = { element: bubble, posY, startX, speed, wobbleSpeed, wobblePhase, size };
-      activeBubbles.push(bubbleData);
-    }
-
-    function updateBubbles() {
-      for (let i = activeBubbles.length - 1; i >= 0; i--) {
-        const b = activeBubbles[i];
-
-        // Move up
-        b.posY -= b.speed;
-
-        // Wobble side to side
-        b.wobblePhase += b.wobbleSpeed;
-        const wobbleX = Math.sin(b.wobblePhase) * 30;
-
-        b.element.style.top = b.posY + 'px';
-        b.element.style.left = (b.startX + wobbleX) + 'px';
-
-        // Remove if off screen
-        if (b.posY < -b.size - 50) {
-          b.element.remove();
-          activeBubbles.splice(i, 1);
+        if (y > -size && !bubble.classList.contains('pop')) {
+          requestAnimationFrame(move);
+        } else if (!bubble.classList.contains('pop')) {
+          bubble.remove();
         }
       }
+      requestAnimationFrame(move);
 
-      requestAnimationFrame(updateBubbles);
+      // Pop on tap
+      bubble.ontouchstart = bubble.onclick = function(e) {
+        e.preventDefault();
+        if (bubble.classList.contains('pop')) return;
+        bubble.classList.add('pop');
+        score++;
+        document.getElementById('score').textContent = score;
+        setTimeout(function() { bubble.remove(); }, 200);
+      };
     }
-
-    function popBubble(bubble) {
-      if (bubble.classList.contains('pop')) return;
-
-      // Find and remove from active bubbles
-      const idx = activeBubbles.findIndex(b => b.element === bubble);
-      if (idx > -1) activeBubbles.splice(idx, 1);
-
-      // Resume audio context if suspended (iOS requirement)
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      playPopSound();
-
-      // Add pop animation
-      bubble.classList.add('pop');
-
-      // Create sparkles
-      const rect = bubble.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      for (let i = 0; i < 6; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        sparkle.textContent = popEmojis[Math.floor(Math.random() * popEmojis.length)];
-        sparkle.style.left = (centerX + (Math.random() - 0.5) * 80) + 'px';
-        sparkle.style.top = (centerY + (Math.random() - 0.5) * 80) + 'px';
-        document.body.appendChild(sparkle);
-
-        sparkle.addEventListener('animationend', () => sparkle.remove());
-      }
-
-      // Update score
-      score++;
-      scoreDisplay.textContent = score;
-
-      // Add stars for milestones
-      if (score % 10 === 0) {
-        starsDisplay.textContent += '🌟';
-      }
-
-      // Remove bubble after pop animation
-      setTimeout(() => bubble.remove(), 300);
-    }
-
-    function startGame() {
-      startScreen.style.display = 'none';
-      score = 0;
-      scoreDisplay.textContent = '0';
-      starsDisplay.textContent = '';
-      activeBubbles = [];
-
-      // Resume audio context
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      // Start animation loop
-      requestAnimationFrame(updateBubbles);
-
-      // Create bubbles periodically
-      createBubble();
-      bubbleInterval = setInterval(createBubble, 1200);
-    }
-
-    startBtn.addEventListener('click', startGame);
-    startBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      startGame();
-    });
   </script>
 </body>
 </html>
